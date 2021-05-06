@@ -83,6 +83,18 @@ public class MinHeap {
         }
     }
 
+    public void insert(int nodeId, int priority) {
+        size++;
+
+        heap[size] = nodeId;
+
+        int current = size;
+        while (heap[current] < heap[parent(current)]) {
+            swap(current, parent(current));
+            current = parent(current);
+        }
+    }
+
     /** Print the array that stores the heap */
     public void print() {
         int i;
@@ -122,6 +134,7 @@ public class MinHeap {
             swap(position, smallestchild);
             position = smallestchild;
         }
+
     }
 
 

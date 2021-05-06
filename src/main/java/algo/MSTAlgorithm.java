@@ -14,9 +14,7 @@ public abstract class MSTAlgorithm {
     private List<Edge> edgesMST = new ArrayList<>(); // edges that belong to
     // minimal spanning tree
 
-    public MSTAlgorithm(Graph graph) {
-        this.graph = graph;
-    }
+    public MSTAlgorithm(Graph graph) { this.graph = graph; }
 
     /** Add an edge to the list of edges of the Minimal Spanning Tree
      *
