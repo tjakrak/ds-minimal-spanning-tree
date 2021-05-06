@@ -36,7 +36,13 @@ public class KruskalAlgorithm extends MSTAlgorithm {
 
         Collections.sort(sortedEdge);
 
-
+        for (Edge e : sortedEdge) {
+            int root1 = nSet.find(e.getId1());
+            int root2 = nSet.find(e.getId2());
+            if (root1 != root2) {
+                nSet.union(e.getId1(), e.getId2());
+            }
+        }
     }
 
 }

@@ -17,8 +17,8 @@
     </dependencies>
 
     <properties>
-        <maven.compiler.target>1.12</maven.compiler.target>
-        <maven.compiler.source>1.12</maven.compiler.source>
+        <maven.compiler.target>1.15</maven.compiler.target>
+        <maven.compiler.source>1.15</maven.compiler.source>
     </properties>
 
 </project>
