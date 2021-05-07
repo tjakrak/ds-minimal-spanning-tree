@@ -1,6 +1,10 @@
 package graph;
 
 import java.awt.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -17,6 +21,7 @@ public class Graph {
     private int numEdges; // total number of edges
     // Add other variable(s) as needed:
     // add a HashMap to map cities to vertexIds.
+    private HashMap<String, Integer>  cityIdAndName = new HashMap<>();
 
     /**
      * Constructor. Read graph info from the given file,
@@ -25,8 +30,67 @@ public class Graph {
      *   @param filename name of the file that has nodes and edges
      */
     public Graph(String filename) {
-        // FILL IN CODE
 
+        try {
+            FileReader f = new FileReader(filename);
+            BufferedReader reader = new BufferedReader(f);
+            String line;
+            Boolean cityNodes = false;
+            int totalCities = 0;
+            int i = 0;
+            while ((line = reader.readLine()) != null) {
+                String[] word = line.split("\\s+");
+                if (word[0].equals("NODES")) {
+                    cityNodes = true;
+                    line = reader.readLine();
+                    totalCities = Integer.parseInt(line);
+                    nodes = new CityNode[totalCities];
+                    adjacencyList = new Edge[totalCities];
+                } else if (word[0].equals("ARCS")) {
+                    cityNodes = false;
+                } else if (cityNodes) {
+                    String cityName = word[0];
+                    double xCoordinate = Double.parseDouble(word[1]);
+                    double yCoordinate = Double.parseDouble(word[2]);
+                    CityNode newCityNode = new CityNode(cityName, xCoordinate, yCoordinate);
+                    nodes[i] = newCityNode;
+                    cityIdAndName.put(cityName, i);
+                    i++;
+                } else {
+                    int id1 = cityIdAndName.get(word[0]);
+                    int id2 = cityIdAndName.get(word[1]);
+                    int cost = Integer.parseInt(word[2]);
+                    Edge newEdge1 = new Edge(id1, id2, cost);
+                    Edge newEdge2 = new Edge(id2, id1, cost);
+                    addEdge(newEdge1, id1);
+                    addEdge(newEdge2, id2);
+                    numEdges += 2;
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("No such file: " + filename);
+        }
+    }
+
+    private void addEdge(Edge e, int sourceId) {
+        if (adjacencyList[sourceId] == null) {
+            adjacencyList[sourceId] = e;
+        } else {
+            Edge temp = adjacencyList[sourceId];
+            if (temp.getId2() == e.getId2()) {
+                System.out.println("Destination already exist");
+                return;
+            } else {
+                while (temp.next() != null) {
+                    temp = temp.next();
+                    if (temp.getId2() == e.getId2()) {
+                        System.out.println("Destination already exist");
+                        return;
+                    }
+                }
+                temp.setNext(e);
+            }
+        }
     }
 
     /**

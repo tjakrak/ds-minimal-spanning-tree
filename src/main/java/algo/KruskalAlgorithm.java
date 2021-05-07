@@ -21,9 +21,9 @@ public class KruskalAlgorithm extends MSTAlgorithm {
      */
     @Override
     public void computeMST() {
-        DisjointSets nSet = new DisjointSets();
+        DisjointSets nSets = new DisjointSets();
         ArrayList<Edge> sortedEdge = new ArrayList<>();
-        nSet.createSets(numNodes());
+        nSets.createSets(numNodes());
 
         Edge temp;
         for (int i = 0; i < numNodes(); i++) {
@@ -37,10 +37,11 @@ public class KruskalAlgorithm extends MSTAlgorithm {
         Collections.sort(sortedEdge);
 
         for (Edge e : sortedEdge) {
-            int root1 = nSet.find(e.getId1());
-            int root2 = nSet.find(e.getId2());
+            int root1 = nSets.find(e.getId1());
+            int root2 = nSets.find(e.getId2());
             if (root1 != root2) {
-                nSet.union(e.getId1(), e.getId2());
+                addMSTEdge(e);
+                nSets.union(e.getId1(), e.getId2());
             }
         }
     }
