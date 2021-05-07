@@ -3,7 +3,7 @@ package priorityQueue;
 /** A priority queue: represented by the min heap.
  *  Used in Prim's algorithm. */
 public class MinHeap {
-    private int[] heap; // the array to store the heap
+    private minHeapNode[] heap; // the array to store the heap
     private int maxsize; // the size of the array
     private int size; // the current number of elements in the array
 
@@ -13,9 +13,9 @@ public class MinHeap {
      */
     public MinHeap(int max) {
         maxsize = max;
-        heap = new int[maxsize];
+        heap = new minHeapNode[maxsize];
         size = 0;
-        heap[0] = Integer.MIN_VALUE;
+        heap[0].priority = Integer.MIN_VALUE;
         // Note: no actual data is stored at heap[0].
         // Assigned MIN_VALUE so that it's easier to bubble up
     }
@@ -62,7 +62,7 @@ public class MinHeap {
      * @param pos2 the index of the second element in the heap
      */
     private void swap(int pos1, int pos2) {
-        int tmp;
+        minHeapNode tmp;
         tmp = heap[pos1];
         heap[pos1] = heap[pos2];
         heap[pos2] = tmp;
@@ -70,26 +70,17 @@ public class MinHeap {
 
     /** Insert an element into the heap
      *
-     * @param elem the element to insert
+     *  @param nodeId the
+     *  @param priority s
      */
-    public void insert(int elem) {
-        size++;
-        heap[size] = elem;
-
-        int current = size;
-        while (heap[current] < heap[parent(current)]) {
-            swap(current, parent(current));
-            current = parent(current);
-        }
-    }
 
     public void insert(int nodeId, int priority) {
         size++;
-
-        heap[size] = nodeId;
+        minHeapNode newNode = new minHeapNode(nodeId, priority);
+        heap[size] = newNode;
 
         int current = size;
-        while (heap[current] < heap[parent(current)]) {
+        while (heap[current].priority < heap[parent(current)].priority) {
             swap(current, parent(current));
             current = parent(current);
         }
@@ -107,7 +98,7 @@ public class MinHeap {
      *
      * @return the smallest element in the heap
      */
-    public int removeMin() {
+    public minHeapNode removeMin() {
         swap(1, size); // swap the end of the heap into the root
         size--;  	   // removed the end of the heap
         // fix the heap property - push down as needed
@@ -121,20 +112,30 @@ public class MinHeap {
      * @param position the index of the element in the heap
      */
     private void pushdown(int position) {
-        int smallestchild;
+        int smallestChild;
         while (!isLeaf(position)) {
-            smallestchild = leftChild(position); // set the smallest child to left child
-            if ((smallestchild < size) && (heap[smallestchild] > heap[smallestchild + 1]))
-                smallestchild = smallestchild + 1; // right child was smaller, so smallest child = right child
+            smallestChild = leftChild(position); // set the smallest child to left child
+            if ((smallestChild < size) && (heap[smallestChild].priority > heap[smallestChild + 1].priority))
+                smallestChild = smallestChild + 1; // right child was smaller, so smallest child = right child
 
             // the value of the smallest child is less than value of current,
             // the heap is already valid
-            if (heap[position] <= heap[smallestchild])
+            if (heap[position].priority <= heap[smallestChild].priority)
                 return;
-            swap(position, smallestchild);
-            position = smallestchild;
+            swap(position, smallestChild);
+            position = smallestChild;
         }
 
+    }
+
+    private class minHeapNode {
+        int nodeId;
+        int priority;
+
+        minHeapNode(int nodeId, int priority) {
+            this.nodeId = nodeId;
+            this.priority = priority;
+        }
     }
 
 
