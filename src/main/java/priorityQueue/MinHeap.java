@@ -17,16 +17,17 @@ public class MinHeap {
         heap = new minHeapNode[maxsize + 1];
         positionArr = new int[max];
         size = 0;
-        heap[0].priority = Integer.MIN_VALUE;
+        minHeapNode base = new minHeapNode(Integer.MAX_VALUE, Integer.MIN_VALUE);
+        heap[0] = base;
         // Note: no actual data is stored at heap[0].
         // Assigned MIN_VALUE so that it's easier to bubble up
 
-        insert(1, 0);
-        for (int i = 2; i <= max; i++) {
+        insert(0, 0);
+        for (int i = 1; i < maxsize; i++) {
             insert(i, Integer.MAX_VALUE);
         }
 
-        for (int i = 0; i < max; i++) {
+        for (int i = 0; i < maxsize; i++) {
             // array store nodeId position. Array index = nodeId and the value in the array is the position
             positionArr[i] = i + 1;
         }
@@ -110,13 +111,13 @@ public class MinHeap {
      *
      * @return the smallest element in the heap
      */
-    public minHeapNode removeMin() {
+    public int removeMin() {
         swap(1, size); // swap the end of the heap into the root
         size--;  	   // removed the end of the heap
         // fix the heap property - push down as needed
         if (size != 0)
             pushDown(1);
-        return heap[size + 1];
+        return heap[size + 1].nodeId;
     }
 
     /** Push the value down the heap if it does not satisfy the heap property
@@ -172,6 +173,9 @@ public class MinHeap {
         }
     }
 
+    public int getPosition(int nodeId) {
+        return positionArr[nodeId];
+    }
 
     private class minHeapNode {
         int nodeId;
