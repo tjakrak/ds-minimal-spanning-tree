@@ -4,6 +4,7 @@ package priorityQueue;
  *  Used in Prim's algorithm. */
 public class MinHeap {
     private minHeapNode[] heap; // the array to store the heap
+    private int[] positionArr;
     private int maxsize; // the size of the array
     private int size; // the current number of elements in the array
 
@@ -13,11 +14,22 @@ public class MinHeap {
      */
     public MinHeap(int max) {
         maxsize = max;
-        heap = new minHeapNode[maxsize];
+        heap = new minHeapNode[maxsize + 1];
+        positionArr = new int[max];
         size = 0;
         heap[0].priority = Integer.MIN_VALUE;
         // Note: no actual data is stored at heap[0].
         // Assigned MIN_VALUE so that it's easier to bubble up
+
+        insert(1, 0);
+        for (int i = 2; i <= max; i++) {
+            insert(i, Integer.MAX_VALUE);
+        }
+
+        for (int i = 0; i < max; i++) {
+            // array store nodeId position. Array index = nodeId and the value in the array is the position
+            positionArr[i] = i + 1;
+        }
     }
 
     /** Return the index of the left child of the element at index pos
@@ -103,7 +115,7 @@ public class MinHeap {
         size--;  	   // removed the end of the heap
         // fix the heap property - push down as needed
         if (size != 0)
-            pushdown(1);
+            pushDown(1);
         return heap[size + 1];
     }
 
@@ -111,7 +123,7 @@ public class MinHeap {
      *
      * @param position the index of the element in the heap
      */
-    private void pushdown(int position) {
+    private void pushDown(int position) {
         int smallestChild;
         while (!isLeaf(position)) {
             smallestChild = leftChild(position); // set the smallest child to left child
@@ -122,11 +134,44 @@ public class MinHeap {
             // the heap is already valid
             if (heap[position].priority <= heap[smallestChild].priority)
                 return;
+            int id1 = heap[position].nodeId;
+            int id2 = heap[smallestChild].nodeId;
+            positionArr[id1] = smallestChild;
+            positionArr[id2] = position;
             swap(position, smallestChild);
             position = smallestChild;
         }
 
     }
+
+    public void reduceKey(int nodeId, int newPriority) {
+        int indexInHeap = positionArr[nodeId];
+        heap[indexInHeap].priority = newPriority;
+    }
+
+    private void pushUp(int position) {
+        int smallestChildIdx = position;
+        int parentIdx = parent(position);
+        while (heap[smallestChildIdx].priority < heap[parentIdx].priority) {
+//            if (position % 2 == 0) {
+//                if (position + 1 < size && heap[smallestChildIdx].priority > heap[position + 1].priority) {
+//                    smallestChildIdx = position + 1;
+//                }
+//            } else {
+//                if (heap[smallestChildIdx].priority > heap[position - 1].priority) {
+//                    smallestChildIdx = position - 1;
+//                }
+//            }
+            int id1 = heap[parentIdx].nodeId;
+            int id2 = heap[smallestChildIdx].nodeId;
+            positionArr[id1] = smallestChildIdx;
+            positionArr[id2] = parentIdx;
+            swap(smallestChildIdx, parentIdx);
+            smallestChildIdx = parentIdx;
+            parentIdx = parent(smallestChildIdx);
+        }
+    }
+
 
     private class minHeapNode {
         int nodeId;
