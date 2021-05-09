@@ -22,8 +22,8 @@ public class MinHeap {
         // Note: no actual data is stored at heap[0].
         // Assigned MIN_VALUE so that it's easier to bubble up
 
-        insert(0, 0);
-        for (int i = 1; i < maxsize; i++) {
+        //insert(0, 0);
+        for (int i = 0; i < maxsize; i++) {
             insert(i, Integer.MAX_VALUE);
         }
 
@@ -148,6 +148,7 @@ public class MinHeap {
     public void reduceKey(int nodeId, int newPriority) {
         int indexInHeap = positionArr[nodeId];
         heap[indexInHeap].priority = newPriority;
+        pushUp(positionArr[nodeId]);
     }
 
     private void pushUp(int position) {
@@ -171,10 +172,6 @@ public class MinHeap {
             smallestChildIdx = parentIdx;
             parentIdx = parent(smallestChildIdx);
         }
-    }
-
-    public int getPosition(int nodeId) {
-        return positionArr[nodeId];
     }
 
     private class minHeapNode {

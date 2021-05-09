@@ -27,6 +27,7 @@ public class PrimAlgorithm extends MSTAlgorithm {
     public void computeMST() {
         // FILL IN CODE
         // Note: must use a MinHeap and be efficient
+        int numNd = numNodes();
         MinHeap pQueue = new MinHeap(numNodes());
         table = new int[numNodes()][3];
         initiateTable();
@@ -40,13 +41,16 @@ public class PrimAlgorithm extends MSTAlgorithm {
             while (temp != null) {
                 if (!hasBeenAdded(temp.getId2())) {
                     pQueue.reduceKey(temp.getId2(), temp.getCost());
-                    updateCostAndPath(temp.getId2(), temp.getCost(), temp.getId1());
+                    updateCostAndPath(temp.getId2(), temp.getCost(), index);
                 }
                 temp = temp.next();
             }
 
-            index = pQueue.removeMin();
+            int minIndex = pQueue.removeMin();
 
+            Edge newEdge = new Edge(getPath(minIndex), minIndex, getCost(minIndex));
+            addMSTEdge(newEdge);
+            index = minIndex;
             ct++;
         }
 
@@ -67,7 +71,7 @@ public class PrimAlgorithm extends MSTAlgorithm {
 
         table[sourceVertex][0] = 1;
         table[sourceVertex][1] = 0;
-        table[sourceVertex][2] = -1;
+        table[sourceVertex][2] = sourceVertex;
     }
 
     private void updateAdded(int vertex) {
@@ -83,10 +87,18 @@ public class PrimAlgorithm extends MSTAlgorithm {
     }
 
     private void updateCostAndPath(int vertex, int cost, int path) {
-        if (table[vertex][0] == 0 && table[vertex][1] < cost) {
+        if (table[vertex][0] == 0 && table[vertex][1] > cost) {
             table[vertex][1] = cost;
             table[vertex][2] = path;
         }
+    }
+
+    private int getCost(int vertex) {
+        return table[vertex][1];
+    }
+
+    private int getPath(int vertex) {
+        return table[vertex][2];
     }
 
 }
