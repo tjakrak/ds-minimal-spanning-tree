@@ -155,15 +155,6 @@ public class MinHeap {
         int smallestChildIdx = position;
         int parentIdx = parent(position);
         while (heap[smallestChildIdx].priority < heap[parentIdx].priority) {
-//            if (position % 2 == 0) {
-//                if (position + 1 < size && heap[smallestChildIdx].priority > heap[position + 1].priority) {
-//                    smallestChildIdx = position + 1;
-//                }
-//            } else {
-//                if (heap[smallestChildIdx].priority > heap[position - 1].priority) {
-//                    smallestChildIdx = position - 1;
-//                }
-//            }
             int id1 = heap[parentIdx].nodeId;
             int id2 = heap[smallestChildIdx].nodeId;
             positionArr[id1] = smallestChildIdx;
