@@ -35,9 +35,9 @@ public abstract class MSTAlgorithm {
      * */
     public void printMST() {
         for (int i = 0; i < edgesMST.size(); i++) {
-            String city1 = graph.getNode(edgesMST.get(i).getId1()).getCity();
-            String city2 = graph.getNode(edgesMST.get(i).getId2()).getCity();
-            System.out.println(city1 + " - " + city2);
+            String city1 = graph.getNode(edgesMST.get(i).getId2()).getCity();
+            String city2 = graph.getNode(edgesMST.get(i).getId1()).getCity();
+            System.out.println(city1 + " " + city2);
         }
 
     }
