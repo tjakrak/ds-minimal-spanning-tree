@@ -103,8 +103,7 @@ public class MinHeap {
     public void print() {
         int i;
         for (i = 1; i <= size; i++)
-            System.out.print(heap[i] + " ");
-        System.out.println();
+            System.out.println(heap[i].nodeId + " " + heap[i].priority);
     }
 
     /** Remove minimum element (it is at the top of the minHeap)
@@ -135,36 +134,60 @@ public class MinHeap {
             // the heap is already valid
             if (heap[position].priority <= heap[smallestChild].priority)
                 return;
+
+            // getting the parent and child that will be swapped
             int id1 = heap[position].nodeId;
             int id2 = heap[smallestChild].nodeId;
+            // update the position arr
             positionArr[id1] = smallestChild;
             positionArr[id2] = position;
+            // swap the parent and child
             swap(position, smallestChild);
             position = smallestChild;
         }
 
     }
 
+    /** Update the priority of a node in the minheap
+     *
+     * @param nodeId the Id of the node/country
+     * @param newPriority the new priority that we will add to the node
+     */
     public void reduceKey(int nodeId, int newPriority) {
+        // getting the position of the nodeId in the heap from positionArr
         int indexInHeap = positionArr[nodeId];
+        // update the priority of the nodeId
         heap[indexInHeap].priority = newPriority;
+        // bubble up the nodeId in the minheap
         pushUp(positionArr[nodeId]);
     }
 
+    /** Push the value up the heap if it does not satisfy the heap property
+     *
+     * @param position the index of the element in the heap
+     */
     private void pushUp(int position) {
         int smallestChildIdx = position;
         int parentIdx = parent(position);
+
+        // while child is smaller than the parent (bubble up)
         while (heap[smallestChildIdx].priority < heap[parentIdx].priority) {
+            // getting the child with the smallest priority from the index
+            // and parent from the index
             int id1 = heap[parentIdx].nodeId;
             int id2 = heap[smallestChildIdx].nodeId;
+            // update positionArr
             positionArr[id1] = smallestChildIdx;
             positionArr[id2] = parentIdx;
+            // swap the child and parent
             swap(smallestChildIdx, parentIdx);
             smallestChildIdx = parentIdx;
             parentIdx = parent(smallestChildIdx);
         }
     }
 
+    /** a Node that store nodeId and priority
+     *  Used in minheap */
     private class minHeapNode {
         int nodeId;
         int priority;

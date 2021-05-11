@@ -38,8 +38,11 @@ public class Graph {
             Boolean cityNodes = false;
             int totalCities = 0;
             int i = 0;
+            // read line by line on the file
             while ((line = reader.readLine()) != null) {
                 String[] word = line.split("\\s+");
+                // if we find "NODES", we know that the next line will be the total number of cities
+                // and also it will be the list of cityNodes until we find word "ARCS"
                 if (word[0].equals("NODES")) {
                     cityNodes = true;
                     line = reader.readLine();
@@ -48,7 +51,7 @@ public class Graph {
                     adjacencyList = new Edge[totalCities];
                 } else if (word[0].equals("ARCS")) {
                     cityNodes = false;
-                } else if (cityNodes) {
+                } else if (cityNodes) { // if it is cityNodes, we will keep adding it to the nodes
                     String cityName = word[0];
                     double xCoordinate = Double.parseDouble(word[1]);
                     double yCoordinate = Double.parseDouble(word[2]);
@@ -56,7 +59,7 @@ public class Graph {
                     nodes[i] = newCityNode;
                     cityIdAndName.put(cityName, i);
                     i++;
-                } else {
+                } else { // otherwise, we will create new edges and add it to the adjacencyList
                     int id1 = cityIdAndName.get(word[0]);
                     int id2 = cityIdAndName.get(word[1]);
                     int cost = Integer.parseInt(word[2]);
@@ -72,24 +75,20 @@ public class Graph {
         }
     }
 
+    /**
+     * Helper function to add edge to the specified vertex
+     *
+     *   @param e edge that we want to add
+     *   @param sourceId the vertex that we would like to add the edge to
+     */
     private void addEdge(Edge e, int sourceId) {
+        // if there is no edge on the vertex(sourceId), we can just add it directly
         if (adjacencyList[sourceId] == null) {
             adjacencyList[sourceId] = e;
+        // if there is edge(s) on the vertex, we add the new edge as the head and set next to the existing edge(s)
         } else {
-            Edge temp = adjacencyList[sourceId];
-            if (temp.getId2() == e.getId2()) {
-                System.out.println("Destination already exist");
-                return;
-            } else {
-                while (temp.next() != null) {
-                    temp = temp.next();
-                    if (temp.getId2() == e.getId2()) {
-                        System.out.println("Destination already exist");
-                        return;
-                    }
-                }
-                temp.setNext(e);
-            }
+            e.setNext(adjacencyList[sourceId]);
+            adjacencyList[sourceId] = e;
         }
     }
 

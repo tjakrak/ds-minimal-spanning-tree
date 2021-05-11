@@ -25,6 +25,7 @@ public class KruskalAlgorithm extends MSTAlgorithm {
         ArrayList<Edge> sortedEdge = new ArrayList<>();
         nSets.createSets(numNodes());
 
+        // get all the unsorted edges from all the nodes and store it to an ArrayList
         Edge temp;
         for (int i = 0; i < numNodes(); i++) {
             temp = getFirstEdge(i);
@@ -34,11 +35,15 @@ public class KruskalAlgorithm extends MSTAlgorithm {
             }
         }
 
+        // sort all the unsorted edges according to the priority
         Collections.sort(sortedEdge);
 
+        // Iterate until we go through all the sorted edges from the ArrayList
         for (Edge e : sortedEdge) {
             int root1 = nSets.find(e.getId1());
             int root2 = nSets.find(e.getId2());
+            // if the root of the edge is not the same, then we will add the edge to the MSTEdge
+            // and connect both roots of the edges (to whichever has the biggest height)
             if (root1 != root2) {
                 addMSTEdge(e);
                 nSets.union(e.getId1(), e.getId2());
